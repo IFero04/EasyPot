@@ -12,8 +12,6 @@ class MonitoringController:
         return stdout, stderr
         
     def start_monitoring(self):
-        print("Started Monitoring")
-        
         command = "tail -f /var/artillery/logs/alerts.log"
         stdout, _ = self.__execute_command(command)
 

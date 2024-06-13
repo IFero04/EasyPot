@@ -21,7 +21,12 @@ class HomeController:
         return False
 
     def get_banned_ips(self):
-        pass
+        command = "cat /var/artillery/banlist.txt"
+        stdout, stderr = self.__execute_command(command)
+        if stderr:
+            raise Exception(stderr.decode())
+        banned_ips = stdout.decode().strip().split('\n')
+        return [ip for ip in banned_ips if ip and not ip.startswith("#")]
 
     def start_server(self):
         command = "screen -dmS artillery_run bash -c 'python3 /var/artillery/artillery.py'"
@@ -50,8 +55,14 @@ class HomeController:
                 raise Exception(stderr)
     
     def remove_ban(self, ip):
-        pass
+        command = f"sed -i '/{ip}/d' /var/artillery/banlist.txt"
+        _, stderr = self.__execute_command(command)
+        if stderr:
+            raise Exception(stderr.decode())
 
     def purge_bans(self):
-        pass
+        command = "echo '' > /var/artillery/banlist.txt"
+        _, stderr = self.__execute_command(command)
+        if stderr:
+            raise Exception(stderr.decode()) 
 

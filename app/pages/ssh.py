@@ -57,6 +57,7 @@ class SSHPage(tk.Frame):
                 messagebox.showinfo("Connection Status", result)
                 _installed = self.pageController.check_installed()
                 if _installed:
+                    self.mainController.open_notebook()
                     self.mainController.show_page("HomePage")
                 else:
                     self.mainController.show_page("InstallPage")

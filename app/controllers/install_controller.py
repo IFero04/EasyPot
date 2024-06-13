@@ -28,7 +28,10 @@ class InstallController:
             "unzip /tmp/artillery.zip -d /tmp/artillery",
             "rm -rf /tmp/artillery.zip",
             "chmod +x /tmp/artillery/setup.py",
-            "python3 /tmp/artillery/setup.py > /tmp/artillery/setup.log 2>&1"
+            "python3 /tmp/artillery/setup.py > /tmp/artillery/setup.log 2>&1",
+            "touch /var/artillery/banlist.txt",
+            "mkdir -p /var/artillery/logs",
+            "touch /var/artillery/logs/alerts.log",
         ]
         total_commands = len(commands)
         completed_commands = 0

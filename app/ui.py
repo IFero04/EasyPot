@@ -14,12 +14,13 @@ class App(tk.Tk):
         tk.Tk.__init__(self)
         self.controller = PageController(self)
         self.title("EasyPot")
-        myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+        myappid = 'SEGRED.EasyPot.artillery.1'
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
         self.setup_icon()
         self.container = tk.Frame(self)
         self.container.pack(fill="both", expand=True)
         self.pages = {}
+        self.notebook = None
         
         self.setup_pages()
     
@@ -42,7 +43,10 @@ class App(tk.Tk):
             frame = Page(parent=self.container, controller=self.controller)
             self.pages[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
+        
+        self.controller.show_page("SSHPage")
 
+    def start_notebook(self):
         self.notebook = ttk.Notebook(self.container)
         self.notebook.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
@@ -50,12 +54,11 @@ class App(tk.Tk):
             page_name = Page.__name__
             frame = Page(parent=self.notebook, controller=self.controller)
             self.pages[page_name] = frame
-            self.notebook.add(frame, text=page_name.replace("Page", ""))
-
-        self.controller.show_page("SSHPage")
+            self.notebook.add(frame, text=page_name)
 
     def run(self):
         self.mainloop()
+
 
 class PageController:
     def __init__(self, app):
@@ -64,26 +67,27 @@ class PageController:
     def show_page(self, page_name):
         if page_name in self.app.pages:
             if page_name in ['SSHPage', 'InstallPage']:
-                self.app.notebook.grid_remove()
+                if self.app.notebook:
+                    self.app.notebook.grid_remove()
                 page = self.app.pages[page_name]
                 page.grid()
                 page.tkraise()
-                self.set_page_size(380, 160) 
+                self.set_page_size(380, 160)
                 self.app.eval('tk::PlaceWindow . center')
             else:
                 self.app.pages['SSHPage'].grid_remove()
                 self.app.pages['InstallPage'].grid_remove()
                 self.app.notebook.grid()
                 self.app.notebook.select(self.app.pages[page_name])
-                self.set_page_size(570, 400)
+                self.set_page_size(630, 430)
                 self.app.eval('tk::PlaceWindow . center')
-            if hasattr(self.app.pages[page_name], 'on_show'):
-                self.app.pages[page_name].on_show()
+            
+        else:
+            print(f"Page '{page_name}' not found in app.pages")
 
     def set_page_size(self, width, height):
         self.app.geometry(f"{width}x{height}")
 
-
-if __name__ == "__main__":
-    app = App()
-    app.run()
+    def open_notebook(self):
+        self.app.start_notebook()
+    

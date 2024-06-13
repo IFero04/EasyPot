@@ -49,6 +49,7 @@ class InstallPage(tk.Frame):
             if self.pageController.check_installed(self.update_progress):
                 self.update_progress(100)
                 messagebox.showinfo("Success", "Artillery installed successfully")
+                self.mainController.open_notebook()
                 self.mainController.show_page("HomePage")
                 self.update_progress(0)
             

@@ -9,12 +9,13 @@ class HomePage(tk.Frame):
         self.pageController = HomeController()
 
         self.create_widgets()
+        self.refresh_page()
 
     def create_widgets(self):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        self.title_label = tk.Label(self, text="Server Management", font=("Helvetica", 16))
+        self.title_label = tk.Label(self, text="Server Management", font=("Helvetica", 16, "bold"))
         self.title_label.grid(row=0, column=0, columnspan=2, pady=10)
 
         # Left side: Server controls
@@ -30,7 +31,7 @@ class HomePage(tk.Frame):
         self.uninstall_button = tk.Button(self, text="Uninstall Server", command=self.uninstall_server)
         self.uninstall_button.grid(row=4, column=0, pady=5, padx=20)
 
-        self.refresh_button = tk.Button(self, text="Refresh", command=self.on_show)
+        self.refresh_button = tk.Button(self, text="Refresh", command=self.refresh_page)
         self.refresh_button.grid(row=5, column=0, pady=5, padx=20)
 
         self.close_button = tk.Button(self, text="Close Connection", command=self.close_connection)
@@ -49,14 +50,10 @@ class HomePage(tk.Frame):
         self.purge_bans_button = tk.Button(self, text="Purge Bans", command=self.purge_bans)
         self.purge_bans_button.grid(row=6, column=1, pady=(5, 20), padx=20)
 
-    def on_show(self):
-        self.update_server_status()
-        self.refresh_banned_ips()
-    
     def close_connection(self):
         self.pageController.disconnect()
         self.mainController.show_page("SSHPage")
-
+    
     def update_server_status(self):
         try:
             if self.pageController.check_artillery_status():
@@ -100,11 +97,14 @@ class HomePage(tk.Frame):
             messagebox.showerror("Error", str(e))
 
     def refresh_banned_ips(self):
-        self.banned_ips_listbox.delete(0, tk.END)
-        banned_ips = self.pageController.get_banned_ips()
-        if banned_ips:
-            for ip in banned_ips:
-                self.banned_ips_listbox.insert(tk.END, ip)
+        try:
+            self.banned_ips_listbox.delete(0, tk.END)
+            banned_ips = self.pageController.get_banned_ips()
+            if banned_ips:
+                for ip in banned_ips:
+                    self.banned_ips_listbox.insert(tk.END, ip)
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
     def remove_selected_ban(self):
         selected_ip = self.banned_ips_listbox.get(tk.ACTIVE)
@@ -123,7 +123,7 @@ class HomePage(tk.Frame):
             messagebox.showinfo("Success", "All bans purged successfully")
         except Exception as e:
             messagebox.showerror("Error", str(e))
-
-    def tkraise(self, aboveThis=None):
-        super().tkraise(aboveThis)
-        self.on_show()
+    
+    def refresh_page(self):
+        self.update_server_status()
+        self.refresh_banned_ips()
