@@ -17,7 +17,6 @@ class SSHPage(tk.Frame):
         self.hostname_label = tk.Label(self, text="Hostname:")
         self.hostname_label.grid(row=1, column=0, pady=5)
         self.hostname_entry = tk.Entry(self)
-        self.hostname_entry.insert(tk.END, "faria-afonso.pt")
         self.hostname_entry.grid(row=1, column=1, pady=5)
 
         self.port_label = tk.Label(self, text="Port:")
@@ -29,13 +28,11 @@ class SSHPage(tk.Frame):
         self.username_label = tk.Label(self, text="Username:")
         self.username_label.grid(row=2, column=0, pady=5)
         self.username_entry = tk.Entry(self)
-        self.username_entry.insert(tk.END, "root")
         self.username_entry.grid(row=2, column=1, pady=5)
 
         self.password_label = tk.Label(self, text="Password:")
         self.password_label.grid(row=2, column=2, pady=5)
         self.password_entry = tk.Entry(self, show="*")
-        self.password_entry.insert(tk.END, "4Ur94J9GtZj1oBv")
         self.password_entry.grid(row=2, column=3, pady=5)
 
         self.connect_button = tk.Button(self, text="Connect", command=self.connect_ssh)
