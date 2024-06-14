@@ -34,13 +34,12 @@ class App(tk.Tk):
     def setup_icon(self):
         try:
             current_directory = os.getcwd()
-            small_icon_path = os.path.join(current_directory, "app", "static", "images", "honey16.png")
-            large_icon_path = os.path.join(current_directory, "app", "static", "images", "honey32.png")
-            small_icon = tk.PhotoImage(file=small_icon_path)
-            large_icon = tk.PhotoImage(file=large_icon_path)
-            self.wm_iconphoto(True, large_icon, small_icon)
-            icon_path = os.path.join(current_directory, "app", "static", "images", "honey.ico")
-            self.iconbitmap(icon_path)
+            icon_path = os.path.join(current_directory, "app", "static", "images", "honey.png")
+            icon = tk.PhotoImage(file=icon_path)
+            self.wm_iconphoto(True, icon)
+            if is_windows():
+                icon_path = os.path.join(current_directory, "app", "static", "images", "honey.ico")
+                self.iconbitmap(icon_path)
         except Exception as e:
             print("Failed to set icon: ", e)
 
