@@ -29,8 +29,6 @@ class App(tk.Tk):
         
         self.setup_pages()
     
-    
-
     def setup_icon(self):
         try:
             current_directory = os.getcwd()
