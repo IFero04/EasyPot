@@ -1,5 +1,6 @@
 import os
 import ctypes
+import platform
 import tkinter as tk
 from tkinter import ttk
 from app.pages.ssh import SSHPage
@@ -9,13 +10,17 @@ from app.pages.monitoring import MonitoringPage
 from app.pages.settings import SettingsPage
 
 
+def is_windows():
+    return platform.system() == "Windows"
+
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.controller = PageController(self)
         self.title("EasyPot")
         myappid = 'SEGRED.EasyPot.artillery.1'
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        if is_windows():
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
         self.setup_icon()
         self.container = tk.Frame(self)
         self.container.pack(fill="both", expand=True)
@@ -24,6 +29,8 @@ class App(tk.Tk):
         
         self.setup_pages()
     
+    
+
     def setup_icon(self):
         try:
             current_directory = os.getcwd()
@@ -72,14 +79,20 @@ class PageController:
                 page = self.app.pages[page_name]
                 page.grid()
                 page.tkraise()
-                self.set_page_size(380, 160)
+                if is_windows():
+                    self.set_page_size(380, 160)
+                else:
+                    self.set_page_size(480, 160)
                 self.app.eval('tk::PlaceWindow . center')
             else:
                 self.app.pages['SSHPage'].grid_remove()
                 self.app.pages['InstallPage'].grid_remove()
                 self.app.notebook.grid()
                 self.app.notebook.select(self.app.pages[page_name])
-                self.set_page_size(630, 430)
+                if is_windows():
+                    self.set_page_size(630, 430)
+                else:
+                    self.set_page_size(750, 430)
                 self.app.eval('tk::PlaceWindow . center')
             
         else:
